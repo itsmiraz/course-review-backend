@@ -1,15 +1,28 @@
 import { catchAsync } from '../../utils/catchAsync';
 import { CourseServices } from './course.servicee';
+import { getDurationInWeeks } from './course.utils';
 
 const createcourse = catchAsync(async (req, res) => {
   // const result = await CourseServices.createcourseIntoDB(req.body);
 
   const payload = req.body;
-  console.log(payload);
+  // console.log(payload);
+
+  const durationInWeeks = getDurationInWeeks(
+    payload.startDate,
+    payload.endDate,
+  );
+
+  const NewCourse = {
+    ...payload,
+    durationInWeeks,
+  };
+  // console.log(NewCourse);
+
   res.status(200).json({
     success: true,
     message: 'course successfully created',
-    data: '',
+    data: NewCourse,
   });
 });
 
