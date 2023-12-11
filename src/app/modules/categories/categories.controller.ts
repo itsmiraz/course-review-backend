@@ -1,4 +1,4 @@
-import { catchAsync } from './utils/catchAsync';
+import { catchAsync } from '../../utils/catchAsync';
 import { categoriesServices } from './categories.servicee';
 const createcategories = catchAsync(async (req, res) => {
   const result = await categoriesServices.createcategoriesIntoDB(req.body);
@@ -15,7 +15,8 @@ const getAllcategoriess = catchAsync(async (req, res) => {
   const result = await categoriesServices.getAllcategoriessFromDb();
   res.status(200).json({
     success: true,
-    message: 'categoriess successfully retrieved',
+    statusCode: 200,
+    message: 'Categories retrieved successfully',
     data: result,
   });
 });

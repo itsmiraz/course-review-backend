@@ -7,7 +7,7 @@ const createcategoriesIntoDB = async (payload: TCategories) => {
 };
 
 const getAllcategoriessFromDb = async () => {
-  const result = ''; // Your Business Logic
+  const result = await Categories.find({}); // Your Business Logic
   return result;
 };
 
