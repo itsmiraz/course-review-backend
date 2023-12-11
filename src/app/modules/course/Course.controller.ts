@@ -1,10 +1,9 @@
+import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import { CourseServices } from './course.servicee';
 import { getDurationInWeeks } from './course.utils';
 
 const createcourse = catchAsync(async (req, res) => {
-  // const result = await CourseServices.createcourseIntoDB(req.body);
-
   const payload = req.body;
   // console.log(payload);
 
@@ -17,12 +16,12 @@ const createcourse = catchAsync(async (req, res) => {
     ...payload,
     durationInWeeks,
   };
-  // console.log(NewCourse);
-
-  res.status(200).json({
+  const result = await CourseServices.createcourseIntoDB(NewCourse);
+  res.status(httpStatus.CREATED).json({
     success: true,
-    message: 'course successfully created',
-    data: NewCourse,
+    statusCode: httpStatus.CREATED,
+    message: 'Course created successfully',
+    data: result,
   });
 });
 
