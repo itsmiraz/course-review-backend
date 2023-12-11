@@ -82,9 +82,19 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     }
   }
 
-  const sortByOrderQuery = await sortByQuery.sort(sortByOder);
+  const sortByOrderQuery = sortByQuery.sort(sortByOder);
 
-  return sortByOrderQuery;
+  let minPrice = 0;
+
+  if (query?.minPrice) {
+    minPrice = Number(query?.minPrice);
+  }
+
+  const minPriceQuery = await sortByOrderQuery.find({
+    price: { $gte: minPrice },
+  });
+
+  return minPriceQuery;
 };
 
 const getSinglecourseFromDb = async (id: string) => {
