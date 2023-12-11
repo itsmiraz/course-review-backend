@@ -90,11 +90,21 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     minPrice = Number(query?.minPrice);
   }
 
-  const minPriceQuery = await sortByOrderQuery.find({
+  const minPriceQuery = sortByOrderQuery.find({
     price: { $gte: minPrice },
   });
 
-  return minPriceQuery;
+  let maxPrice = {};
+
+  if (query?.maxPrice) {
+    maxPrice = {
+      price: { $lte: maxPrice },
+    };
+  }
+
+  const maxPriceQuery = await minPriceQuery.find(maxPrice);
+
+  return maxPriceQuery;
 };
 
 const getSinglecourseFromDb = async (id: string) => {
