@@ -1,18 +1,19 @@
 import { catchAsync } from '../../utils/catchAsync';
-import { categoriesServices } from './categories.servicee';
-const createcategories = catchAsync(async (req, res) => {
-  const result = await categoriesServices.createcategoriesIntoDB(req.body);
+import { ReviewServices } from './review.servicee';
+
+const createReview = catchAsync(async (req, res) => {
+  const result = await ReviewServices.createReviewIntoDB(req.body);
 
   res.status(201).json({
     success: true,
     statusCode: 201,
-    message: 'Category created successfully',
+    message: 'Review created successfully',
     data: result,
   });
 });
 
 const getAllcategoriess = catchAsync(async (req, res) => {
-  const result = await categoriesServices.getAllcategoriessFromDb();
+  const result = await ReviewServices.getAllReviewsFromDb();
   res.status(200).json({
     success: true,
     statusCode: 200,
@@ -21,7 +22,7 @@ const getAllcategoriess = catchAsync(async (req, res) => {
   });
 });
 
-export const categoriesControllers = {
-  createcategories,
+export const ReviewControllers = {
+  createReview,
   getAllcategoriess,
 };
