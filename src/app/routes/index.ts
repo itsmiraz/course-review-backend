@@ -3,6 +3,7 @@ import {
   createCourseRoutes,
   otherCourseRoutes,
 } from '../modules/course/course.route';
+import { CategoriesRoutes } from '../modules/categories/categories.route';
 
 const router = Router();
 
@@ -14,6 +15,10 @@ const ModuleRoutes = [
   {
     path: '/courses',
     route: otherCourseRoutes,
+  },
+  {
+    path: '/categories',
+    route: CategoriesRoutes,
   },
 ];
 
