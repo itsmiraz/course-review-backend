@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import { TCourse } from './Course.interface';
+import { Tcourse } from './course.interface';
 
-const CourseSchema = new Schema<TCourse>(
+const courseSchema = new Schema<Tcourse>(
   {
     // Your Model according to the interface
   },
@@ -11,4 +11,4 @@ const CourseSchema = new Schema<TCourse>(
   },
 );
 
-export const Course = model<TCourse>('Course', CourseSchema);
+export const course = model<Tcourse>('course', courseSchema);

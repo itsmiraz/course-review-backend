@@ -1,39 +1,39 @@
-import { Course } from './Course.model';
-import { TCourse } from './Course.interface';
+import { course } from './course.model';
+import { Tcourse } from './course.interface';
 
-const createCourseIntoDB = async (payload: TCourse) => {
-  const result = await Course.create(payload);
+const createcourseIntoDB = async (payload: Tcourse) => {
+  const result = await course.create(payload);
 
   return result;
 };
 
-const getAllCoursesFromDb = async () => {
+const getAllcoursesFromDb = async () => {
   const result = ''; // Your Business Logic
   return result;
 };
 
-const getSingleCourseFromDb = async (id: string) => {
-  const result = await Course.findById(id);
+const getSinglecourseFromDb = async (id: string) => {
+  const result = await course.findById(id);
 
   return result;
 };
 
-const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
-  const result = await Course.findOneAndUpdate({ _id: id }, payload, {
+const updatecourseIntoDB = async (id: string, payload: Partial<Tcourse>) => {
+  const result = await course.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
   return result;
 };
 
-const deleteCourseIntoDB = async (id: string) => {
-  const result = await Course.findByIdAndDelete(id);
+const deletecourseIntoDB = async (id: string) => {
+  const result = await course.findByIdAndDelete(id);
   return result;
 };
 
-export const CourseServices = {
-  createCourseIntoDB,
-  getAllCoursesFromDb,
-  getSingleCourseFromDb,
-  updateCourseIntoDB,
-  deleteCourseIntoDB,
+export const courseServices = {
+  createcourseIntoDB,
+  getAllcoursesFromDb,
+  getSinglecourseFromDb,
+  updatecourseIntoDB,
+  deletecourseIntoDB,
 };
