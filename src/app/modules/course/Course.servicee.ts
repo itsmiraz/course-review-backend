@@ -102,9 +102,17 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     };
   }
 
-  const maxPriceQuery = await minPriceQuery.find(maxPrice);
+  const maxPriceQuery = minPriceQuery.find(maxPrice);
 
-  return maxPriceQuery;
+  let tag = {};
+
+  if (query?.tags) {
+    tag = { tags: { $elemMatch: { name: query?.tags as string } } };
+  }
+
+  const tagQuery = await maxPriceQuery.find(tag);
+
+  return tagQuery;
 };
 
 const getSinglecourseFromDb = async (id: string) => {
