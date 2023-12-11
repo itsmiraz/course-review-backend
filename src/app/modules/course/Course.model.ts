@@ -1,9 +1,73 @@
 import { Schema, model } from 'mongoose';
-import { Tcourse } from './course.interface';
+import { TCourse, TDetails, TTag } from './course.interface';
 
-const courseSchema = new Schema<Tcourse>(
+const tagSchema = new Schema<TTag>({
+  name: {
+    type: String,
+    required: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+});
+const detailSchema = new Schema<TDetails>({
+  level: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+});
+
+const courseSchema = new Schema<TCourse>(
   {
-    // Your Model according to the interface
+    title: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    instructor: {
+      type: String,
+      required: true,
+    },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    tags: {
+      type: [tagSchema],
+      required: true,
+    },
+    startDate: {
+      type: String,
+      required: true,
+    },
+    endDate: {
+      type: String,
+      required: true,
+    },
+    language: {
+      type: String,
+      required: true,
+    },
+    provider: {
+      type: String,
+      required: true,
+    },
+    durationInWeeks: {
+      type: Number,
+      required: true,
+    },
+    details: {
+      type: detailSchema,
+      required: true,
+    },
   },
 
   {
@@ -11,4 +75,4 @@ const courseSchema = new Schema<Tcourse>(
   },
 );
 
-export const course = model<Tcourse>('course', courseSchema);
+export const Course = model<TCourse>('course', courseSchema);
