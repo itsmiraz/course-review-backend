@@ -3,6 +3,7 @@ import cors from 'cors';
 // import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFound from './app/middlewares/not-found';
 import router from './app/routes';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
 const app: Application = express();
 
 //parser
@@ -19,7 +20,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
-// app.use(globalErrorHandler);
+app.use(globalErrorHandler);
 // Not Found
 
 app.use(notFound);

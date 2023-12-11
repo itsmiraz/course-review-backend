@@ -1,17 +1,20 @@
 import { catchAsync } from '../../utils/catchAsync';
-import { courseServices } from './course.servicee';
-const createcourse = catchAsync(async (req, res) => {
-  const result = await courseServices.createcourseIntoDB(req.body);
+import { CourseServices } from './course.servicee';
 
+const createcourse = catchAsync(async (req, res) => {
+  // const result = await CourseServices.createcourseIntoDB(req.body);
+
+  const payload = req.body;
+  console.log(payload);
   res.status(200).json({
     success: true,
     message: 'course successfully created',
-    data: result,
+    data: '',
   });
 });
 
 const getAllcourses = catchAsync(async (req, res) => {
-  const result = await courseServices.getAllcoursesFromDb();
+  const result = await CourseServices.getAllcoursesFromDb();
   res.status(200).json({
     success: true,
     message: 'courses successfully retrieved',
@@ -21,7 +24,7 @@ const getAllcourses = catchAsync(async (req, res) => {
 
 const getSinglecourse = catchAsync(async (req, res) => {
   const courseId = req.params.id;
-  const result = await courseServices.getSinglecourseFromDb(courseId);
+  const result = await CourseServices.getSinglecourseFromDb(courseId);
 
   res.status(200).json({
     success: true,
@@ -32,7 +35,7 @@ const getSinglecourse = catchAsync(async (req, res) => {
 
 const updatecourse = catchAsync(async (req, res) => {
   const { courseId } = req.params;
-  const result = await courseServices.updatecourseIntoDB(courseId, req.body);
+  const result = await CourseServices.updatecourseIntoDB(courseId, req.body);
   res.status(200).json({
     success: true,
     message: 'course Updated',
@@ -42,7 +45,7 @@ const updatecourse = catchAsync(async (req, res) => {
 
 const deletecourse = catchAsync(async (req, res) => {
   const { courseId } = req.params;
-  const result = await courseServices.deletecourseIntoDB(courseId);
+  const result = await CourseServices.deletecourseIntoDB(courseId);
   res.status(200).json({
     success: true,
     message: 'course Deleted Successfully',
