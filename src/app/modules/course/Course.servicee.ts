@@ -112,7 +112,15 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
 
   const tagQuery = await maxPriceQuery.find(tag);
 
-  return tagQuery;
+  const metaData = {
+    page: page,
+    limit: limit,
+    total: tagQuery?.length,
+  };
+  return {
+    metaData,
+    data: tagQuery,
+  };
 };
 
 const getSinglecourseFromDb = async (id: string) => {

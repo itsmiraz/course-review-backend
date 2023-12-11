@@ -17,6 +17,7 @@ const createcourse = catchAsync(async (req, res) => {
     durationInWeeks,
   };
   const result = await CourseServices.createcourseIntoDB(NewCourse);
+
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: httpStatus.CREATED,
@@ -31,8 +32,10 @@ const getAllcourses = catchAsync(async (req, res) => {
   const result = await CourseServices.getAllcoursesFromDb(query);
   res.status(200).json({
     success: true,
-    message: 'courses successfully retrieved',
-    data: result,
+    statusCode: 200,
+    message: 'Courses retrieved successfully',
+    meta: result.metaData,
+    data: result.data,
   });
 });
 
