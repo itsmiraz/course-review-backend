@@ -117,12 +117,25 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
 
   const languageQuery = tagQuery.find(language);
 
+  let startDate = {};
+  if (query?.startDate) {
+    startDate = { startDate: query?.startDate };
+  }
+
+  const startDateQuery = languageQuery.find(startDate);
+
+  let endDate = {};
+  if (query?.endDate) {
+    endDate = { endDate: query?.endDate };
+  }
+
+  const endDateQuery = startDateQuery.find(endDate);
+
   let provider = {};
   if (query?.provider) {
     provider = { provider: query?.provider };
   }
-
-  const providerQuery = languageQuery.find(provider);
+  const providerQuery = endDateQuery.find(provider);
 
   let durationInWeeks = {};
   if (query?.durationInWeeks) {
