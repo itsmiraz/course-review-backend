@@ -122,16 +122,30 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     provider = { provider: query?.provider };
   }
 
-  const providerQuery = await languageQuery.find(provider);
+  const providerQuery = languageQuery.find(provider);
+
+  let durationInWeeks = {};
+  if (query?.durationInWeeks) {
+    durationInWeeks = { durationInWeeks: query?.durationInWeeks };
+  }
+
+  const durationInWeeksQuery = providerQuery.find(durationInWeeks);
+
+  let level = {};
+  if (query?.level) {
+    level = { 'details.level': query?.level };
+  }
+
+  const levelQuery = await durationInWeeksQuery.find(level);
 
   const metaData = {
     page: page,
     limit: limit,
-    total: providerQuery?.length,
+    total: levelQuery?.length,
   };
   return {
     metaData,
-    data: providerQuery,
+    data: levelQuery,
   };
 };
 
