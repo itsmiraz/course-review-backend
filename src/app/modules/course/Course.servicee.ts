@@ -115,16 +115,23 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     language = { language: query?.language };
   }
 
-  const languageQuery = await tagQuery.find(language);
+  const languageQuery = tagQuery.find(language);
+
+  let provider = {};
+  if (query?.provider) {
+    provider = { provider: query?.provider };
+  }
+
+  const providerQuery = await languageQuery.find(provider);
 
   const metaData = {
     page: page,
     limit: limit,
-    total: languageQuery?.length,
+    total: providerQuery?.length,
   };
   return {
     metaData,
-    data: languageQuery,
+    data: providerQuery,
   };
 };
 
