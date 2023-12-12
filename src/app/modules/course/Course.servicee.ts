@@ -3,6 +3,7 @@ import { TCourse } from './course.interface';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import { Review } from '../review/review.model';
 
 const createcourseIntoDB = async (payload: TCourse) => {
   const result = await Course.create(payload);
@@ -119,12 +120,6 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
   };
 };
 
-const getSinglecourseFromDb = async (id: string) => {
-  const result = await Course.findById(id);
-
-  return result;
-};
-
 const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
   const { tags, details, ...remainingCourseData } = payload;
 
@@ -238,15 +233,20 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
   }
 };
 
-const deletecourseIntoDB = async (id: string) => {
-  const result = await Course.findByIdAndDelete(id);
-  return result;
+const getReviewsFromDb = async (id: string) => {
+  const course = await Course.findById(id);
+
+  const reviews = await Review.find({ courseId: id });
+
+  return {
+    course,
+    reviews,
+  };
 };
 
 export const CourseServices = {
   createcourseIntoDB,
   getAllcoursesFromDb,
-  getSinglecourseFromDb,
   updatecourseIntoDB,
-  deletecourseIntoDB,
+  getReviewsFromDb,
 };

@@ -39,17 +39,6 @@ const getAllcourses = catchAsync(async (req, res) => {
   });
 });
 
-const getSinglecourse = catchAsync(async (req, res) => {
-  const courseId = req.params.id;
-  const result = await CourseServices.getSinglecourseFromDb(courseId);
-
-  res.status(200).json({
-    success: true,
-    message: 'Here is your course',
-    data: result,
-  });
-});
-
 const updatecourse = catchAsync(async (req, res) => {
   const { courseId } = req.params;
   const result = await CourseServices.updatecourseIntoDB(courseId, req.body);
@@ -61,20 +50,22 @@ const updatecourse = catchAsync(async (req, res) => {
   });
 });
 
-const deletecourse = catchAsync(async (req, res) => {
+const getReviews = catchAsync(async (req, res) => {
   const { courseId } = req.params;
-  const result = await CourseServices.deletecourseIntoDB(courseId);
+
+  const result = await CourseServices.getReviewsFromDb(courseId);
+
   res.status(200).json({
     success: true,
-    message: 'course Deleted Successfully',
+    statusCode: 200,
+    message: 'Course and Reviews retrieved successfully',
     data: result,
   });
 });
 
 export const courseControllers = {
   createcourse,
-  getSinglecourse,
   getAllcourses,
-  deletecourse,
   updatecourse,
+  getReviews,
 };
