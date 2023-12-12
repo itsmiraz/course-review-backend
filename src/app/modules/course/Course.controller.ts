@@ -55,7 +55,8 @@ const updatecourse = catchAsync(async (req, res) => {
   const result = await CourseServices.updatecourseIntoDB(courseId, req.body);
   res.status(200).json({
     success: true,
-    message: 'course Updated',
+    statusCode: 200,
+    message: 'Course updated successfully',
     data: result,
   });
 });

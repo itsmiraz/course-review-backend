@@ -1,6 +1,8 @@
 import { Course } from './course.model';
 import { TCourse } from './course.interface';
 import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
+import mongoose from 'mongoose';
 
 const createcourseIntoDB = async (payload: TCourse) => {
   const result = await Course.create(payload);
@@ -10,12 +12,6 @@ const createcourseIntoDB = async (payload: TCourse) => {
 
 const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
   const queryObj = { ...query };
-
-  // let searchTerm = '';
-
-  // if (query?.searchTerm) {
-  //   searchTerm = query?.searchTerm as string
-  // }
 
   const excludeFields = [
     'page',
@@ -130,10 +126,116 @@ const getSinglecourseFromDb = async (id: string) => {
 };
 
 const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
-  const result = await Course.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
-  return result;
+  const { tags, details, ...remainingCourseData } = payload;
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const updateBasicCourseInfo = await Course.findByIdAndUpdate(
+      id,
+      remainingCourseData,
+      {
+        new: true,
+        runValidators: true,
+        session,
+      },
+    );
+
+    if (!updateBasicCourseInfo) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Failed to Update Basic Details',
+      );
+    }
+
+    // check if we have to delete any tags or not
+    if (tags && tags.length > 0) {
+      const willdeletedTags = tags
+        .filter((el) => el.name && el.isDeleted)
+        .map((el) => el.name);
+
+      const deletedTagsInCourse = await Course.findByIdAndUpdate(
+        id,
+        {
+          $pull: {
+            tags: { name: { $in: willdeletedTags } },
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+
+      if (!deletedTagsInCourse) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Failed to Delete tags');
+      }
+    }
+
+    // check if we have to add any tags or not
+    if (tags && tags.length > 0) {
+      const willbeAddTags = tags.filter((el) => el.name && !el.isDeleted);
+
+      const deletedTagsInCourse = await Course.findByIdAndUpdate(
+        id,
+        {
+          $addToSet: {
+            tags: { $each: willbeAddTags },
+          },
+        },
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+
+      if (!deletedTagsInCourse) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'Failed to Add tags');
+      }
+    }
+
+    // check if we have to update the details
+    if (details) {
+      const modifiedData: Record<string, unknown> = {
+        ...remainingCourseData,
+      };
+
+      if (details && Object.keys(details).length) {
+        for (const [key, value] of Object.entries(details)) {
+          modifiedData[`details.${key}`] = value;
+        }
+      }
+      const updateDetailsData = await Course.findByIdAndUpdate(
+        id,
+        modifiedData,
+        {
+          new: true,
+          runValidators: true,
+          session,
+        },
+      );
+      if (!updateDetailsData) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          'Failed to Update Details Details',
+        );
+      }
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    const result = await Course.findById(id);
+    return result;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course');
+  }
 };
 
 const deletecourseIntoDB = async (id: string) => {

@@ -12,11 +12,11 @@ const createNumberSchema = (fieldName: string) =>
     required_error: `${fieldName} is required`,
   });
 
-const tagValidationSchema = z.object({
+const createtagValidationSchema = z.object({
   name: createStringSchema('Tag Name'),
   isDeleted: z.boolean(),
 });
-const detailValidationSchema = z.object({
+const createdetailValidationSchema = z.object({
   level: createStringSchema('Level'),
   description: createStringSchema('Description'),
 });
@@ -27,15 +27,40 @@ const createCourseValidationSchema = z.object({
     instructor: createStringSchema('Instructor'),
     categoryId: createStringSchema('Category Id'),
     price: createNumberSchema('Price'),
-    tags: z.array(tagValidationSchema),
+    tags: z.array(createtagValidationSchema),
     startDate: createStringSchema('Start Date'),
     endDate: createStringSchema('End Date'),
     language: createStringSchema('Language'),
     provider: createStringSchema('Provider'),
-    details: detailValidationSchema,
+    details: createdetailValidationSchema,
+  }),
+});
+
+const updateTagValidationSchema = z.object({
+  name: createStringSchema('Tag Name'),
+  isDeleted: z.boolean(),
+});
+const updateDetailValidationSchema = z.object({
+  level: createStringSchema('Level').optional(),
+  description: createStringSchema('Description').optional(),
+});
+
+const updateCourseValidationSchema = z.object({
+  body: z.object({
+    title: createStringSchema('Title').optional(),
+    instructor: createStringSchema('Instructor').optional(),
+    categoryId: createStringSchema('Category Id').optional(),
+    price: createNumberSchema('Price').optional(),
+    tags: z.array(updateTagValidationSchema).optional(),
+    startDate: createStringSchema('Start Date').optional(),
+    endDate: createStringSchema('End Date').optional(),
+    language: createStringSchema('Language').optional(),
+    provider: createStringSchema('Provider').optional(),
+    details: updateDetailValidationSchema.optional(),
   }),
 });
 
 export const CourseValidations = {
   createCourseValidationSchema,
+  updateCourseValidationSchema,
 };
