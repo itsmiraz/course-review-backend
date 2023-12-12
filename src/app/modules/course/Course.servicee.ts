@@ -21,7 +21,8 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     'sortOrder',
     'minPrice',
     'tags',
-    'startDate endDate',
+    'startDate',
+    'endDate',
     'language',
     'provider',
     'durationInWeeks',
@@ -107,16 +108,23 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     tag = { tags: { $elemMatch: { name: query?.tags as string } } };
   }
 
-  const tagQuery = await maxPriceQuery.find(tag);
+  const tagQuery = maxPriceQuery.find(tag);
+
+  let language = {};
+  if (query?.language) {
+    language = { language: query?.language };
+  }
+
+  const languageQuery = await tagQuery.find(language);
 
   const metaData = {
     page: page,
     limit: limit,
-    total: tagQuery?.length,
+    total: languageQuery?.length,
   };
   return {
     metaData,
-    data: tagQuery,
+    data: languageQuery,
   };
 };
 
