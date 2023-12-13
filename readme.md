@@ -97,7 +97,7 @@ A number of node.js tools is necessary to initialize and test the project. You m
   }
   ```
 
-### Run the Application
+## Run the Application
 
 The project is preconfigured with a simple development web server. The simplest way to start this server is:
 
