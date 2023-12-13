@@ -11,6 +11,4 @@ router.post(
   ReviewControllers.createReview,
 );
 
-router.get('/', ReviewControllers.getAllcategoriess);
-
 export const ReviewRoutes = router;

@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import { CourseServices } from './course.servicee';
 import { getDurationInWeeks } from './course.utils';
+import { Course } from './course.model';
+import AppError from '../../errors/AppError';
 
 const createcourse = catchAsync(async (req, res) => {
   const payload = req.body;
@@ -51,6 +53,11 @@ const updatecourse = catchAsync(async (req, res) => {
 
 const getReviews = catchAsync(async (req, res) => {
   const { courseId } = req.params;
+
+  const course = await Course.isCourseExists(courseId);
+  if (!course) {
+    throw new AppError(404, 'Course Does not Exits');
+  }
 
   const result = await CourseServices.getReviewsFromDb(courseId);
 
