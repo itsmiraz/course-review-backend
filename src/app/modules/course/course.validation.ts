@@ -8,7 +8,7 @@ const createStringSchema = (fieldName: string) =>
     .transform((data) => data.trim());
 const createNumberSchema = (fieldName: string) =>
   z.number({
-    invalid_type_error: `${fieldName} must be a string`,
+    invalid_type_error: `${fieldName} must be a number`,
     required_error: `${fieldName} is required`,
   });
 

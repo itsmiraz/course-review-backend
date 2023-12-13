@@ -4,8 +4,7 @@ import { TGenericErrorResponse } from '../interfaces/error';
 const handleZodError = (err: ZodError): TGenericErrorResponse => {
   const issuesMessage = err.issues.map((issue) => issue.message);
   const errorMessage = issuesMessage.join('. ');
-
-  // console.log(err.issues[0].message);
+  console.log(errorMessage);
   const statusCode = 400;
 
   const ErrorDetails = {
