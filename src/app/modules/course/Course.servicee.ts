@@ -351,6 +351,13 @@ const getBestCourseFromDb = async () => {
     {
       $limit: 1,
     },
+    {
+      $project: {
+        _id: 1,
+        count: 1,
+        averageRating: { $round: ['$averageRating', 2] },
+      },
+    },
   ]);
 
   const bestCourseReviewData = reviews[0];
