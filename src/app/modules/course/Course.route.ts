@@ -13,7 +13,7 @@ createRouter.post(
 );
 
 router.get('/', courseControllers.getAllcourses);
-router.patch(
+router.put(
   '/:courseId',
   validateRequest(CourseValidations.updateCourseValidationSchema),
   courseControllers.updatecourse,
