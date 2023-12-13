@@ -27,7 +27,6 @@ A number of node.js tools is necessary to initialize and test the project. You m
 ### 1. GET /api/courses
 
 - **Description:** Get a list of all courses.
--
 
 ### 2. POST /api/course
 
@@ -57,6 +56,44 @@ A number of node.js tools is necessary to initialize and test the project. You m
       "level": "Intermediate",
       "description": "Detailed description of the course"
     }
+  }
+  ```
+
+### 3. PUT api/courses/:courseId
+
+- **Description:** Update Course.
+
+### 4. GET /api/courses/:courseId/reviews
+
+- **Description:** Get Reviews for Course.
+
+### 5. POST /api/categories
+
+- **Description:** Create Catagory.
+- **Request Body:**
+  ```json
+  {
+    "name": "Programming"
+  }
+  ```
+
+### 6. GET /api/categories
+
+- **Description:** Get Categories.
+
+### 7. GET /api/categories
+
+- **Description:** Get Categories.
+
+### 8. POST /api/reviews
+
+- **Description:** Get Categories.
+- **Request Body:**
+  ```json
+  {
+    "courseId": "123456789012345678901234",
+    "rating": 4,
+    "review": "Great course!"
   }
   ```
 
