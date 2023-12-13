@@ -14,7 +14,8 @@ import AppError from '../errors/AppError';
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;
   let message = 'Something Went Wrong';
-
+  let errorMessage = 'Something Went Wrong';
+  let errorDetails = {};
   let errorSource: TErrorSource = [
     {
       path: '',
@@ -37,7 +38,9 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     const simplifierError = handleCastError(err);
     statusCode = simplifierError.statusCode;
     message = simplifierError.message;
-    errorSource = simplifierError.errorSources;
+    // errorSource = simplifierError.errorSources;
+    errorMessage = simplifierError.errorMessage;
+    errorDetails = simplifierError.errorDetails;
   } else if (err?.code === 11000) {
     const simplifierError = handleDuplicateError(err);
     statusCode = simplifierError.statusCode;
@@ -65,9 +68,9 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   return res.status(statusCode).json({
     success: false,
     message: message,
-    errorSource,
-
-    stack: config.NODE_ENV === 'development' ? err?.stack : null,
+    errorMessage: errorMessage,
+    errorDetails: errorDetails,
+    stack: err?.stack,
   });
 };
 

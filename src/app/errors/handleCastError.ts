@@ -1,22 +1,27 @@
 import mongoose from 'mongoose';
-import { TErrorSource, TGenericErrorResponse } from '../interfaces/error';
+import { TGenericErrorResponse } from '../interfaces/error';
 
 const handleCastError = (
   err: mongoose.Error.CastError,
 ): TGenericErrorResponse => {
-  const errorSources: TErrorSource = [
-    {
-      path: err?.path,
-      message: err?.message,
-    },
-  ];
+  const objectIdPattern = /[0-9a-fA-F]{24}/;
 
-  const statusCode = 400;
+  const id = err?.message.match(objectIdPattern);
+  // const errorSources: TErrorSource = [
+  //   {
+  //     path: err?.path,
+  //     message: err?.message,
+  //   },
+  // ];
+
+  const errorMessage = `${id} is not a valid ID!`;
 
   return {
-    statusCode,
+    statusCode: 400,
+    success: false,
+    errorMessage,
     message: 'Invalid Id',
-    errorSources,
+    errorDetails: err,
   };
 };
 export default handleCastError;
