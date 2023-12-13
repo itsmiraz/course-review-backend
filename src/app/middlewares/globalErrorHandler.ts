@@ -28,7 +28,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     const simplifierError = handleZodError(err);
     statusCode = simplifierError.statusCode;
     message = simplifierError.message;
-    errorSource = simplifierError.errorSources;
+    errorDetails = simplifierError.errorDetails;
+    errorMessage = simplifierError.errorMessage;
   } else if (err?.name === 'ValidationError') {
     const simplifierError = handleValidationError(err);
     statusCode = simplifierError.statusCode;
