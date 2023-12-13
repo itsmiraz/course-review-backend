@@ -150,11 +150,11 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
   }
 
   const levelQuery = await durationInWeeksQuery.find(level);
-
+  const allCourse = await Course.find({});
   const metaData = {
     page: page,
     limit: limit,
-    total: levelQuery?.length,
+    total: allCourse.length,
   };
   return {
     metaData,

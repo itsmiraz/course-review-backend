@@ -7,7 +7,6 @@ const tagSchema = new Schema<TTag>(
   {
     name: {
       type: String,
-      unique: true,
       required: true,
     },
     isDeleted: {
