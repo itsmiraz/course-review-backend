@@ -4,9 +4,20 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import { Review } from '../review/review.model';
+import { getDurationInWeeks } from './course.utils';
 
 const createcourseIntoDB = async (payload: TCourse) => {
-  const result = await Course.create(payload);
+  const durationInWeeks = getDurationInWeeks(
+    payload.startDate,
+    payload.endDate,
+  );
+
+  const NewCourse = {
+    ...payload,
+    durationInWeeks,
+  };
+
+  const result = await Course.create(NewCourse);
 
   return result;
 };
@@ -163,12 +174,55 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
 };
 
 const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
-  const { tags, details, ...remainingCourseData } = payload;
+  const {
+    tags,
+    details,
+    startDate,
+    endDate,
+    durationInWeeks,
+    ...remainingCourseData
+  } = payload;
+
+  const oldCourse = await Course.findById(id);
+
+  if (durationInWeeks && durationInWeeks !== oldCourse?.durationInWeeks) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Failed to Update durationInWeeks Details',
+    );
+  }
+  let newdurationInWeeks = 0;
+  if (startDate || endDate) {
+    newdurationInWeeks = getDurationInWeeks(
+      (startDate as string) || (oldCourse?.startDate as string),
+      (endDate as string) || (oldCourse?.endDate as string),
+    );
+  }
 
   const session = await mongoose.startSession();
-
   try {
     session.startTransaction();
+
+    if (startDate || endDate) {
+      const updateDurationInWeeks = await Course.findByIdAndUpdate(
+        id,
+        {
+          startDate: startDate || oldCourse?.startDate,
+          endDate: endDate || oldCourse?.endDate,
+
+          durationInWeeks: newdurationInWeeks,
+        },
+        {
+          new: true,
+        },
+      );
+      if (!updateDurationInWeeks) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          'Failed to Update Basic Details',
+        );
+      }
+    }
 
     const updateBasicCourseInfo = await Course.findByIdAndUpdate(
       id,
@@ -297,7 +351,7 @@ const getBestCourseFromDb = async () => {
     },
     {
       $sort: {
-        count: -1,
+        averageRating: -1,
       },
     },
     {
