@@ -1,19 +1,24 @@
 import { Schema, model } from 'mongoose';
-import { TCourse, TDetails, TTag } from './course.interface';
+import { CourseModel, TCourse, TDetails, TTag } from './course.interface';
 import { Categories } from '../categories/categories.model';
 import AppError from '../../errors/AppError';
 
-const tagSchema = new Schema<TTag>({
-  name: {
-    type: String,
-    unique: true,
-    required: true,
+const tagSchema = new Schema<TTag>(
+  {
+    name: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
+  {
+    _id: false,
   },
-});
+);
 const detailSchema = new Schema<TDetails>({
   level: {
     type: String,
@@ -24,59 +29,53 @@ const detailSchema = new Schema<TDetails>({
   },
 });
 
-const courseSchema = new Schema<TCourse>(
-  {
-    title: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    instructor: {
-      type: String,
-      required: true,
-    },
-    categoryId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    tags: {
-      type: [tagSchema],
-      required: true,
-    },
-    startDate: {
-      type: String,
-      required: true,
-    },
-    endDate: {
-      type: String,
-      required: true,
-    },
-    language: {
-      type: String,
-      required: true,
-    },
-    provider: {
-      type: String,
-      required: true,
-    },
-    durationInWeeks: {
-      type: Number,
-      required: true,
-    },
-    details: {
-      type: detailSchema,
-      required: true,
-    },
+const courseSchema = new Schema<TCourse, CourseModel>({
+  title: {
+    type: String,
+    unique: true,
+    required: true,
   },
-
-  {
-    timestamps: true,
+  instructor: {
+    type: String,
+    required: true,
   },
-);
+  categoryId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  tags: {
+    type: [tagSchema],
+    required: true,
+  },
+  startDate: {
+    type: String,
+    required: true,
+  },
+  endDate: {
+    type: String,
+    required: true,
+  },
+  language: {
+    type: String,
+    required: true,
+  },
+  provider: {
+    type: String,
+    required: true,
+  },
+  durationInWeeks: {
+    type: Number,
+    required: true,
+  },
+  details: {
+    type: detailSchema,
+    required: true,
+  },
+});
 
 courseSchema.pre('save', async function (next) {
   const isCatagoryExists = await Categories.findById(this.categoryId);
@@ -86,4 +85,10 @@ courseSchema.pre('save', async function (next) {
   next();
 });
 
-export const Course = model<TCourse>('course', courseSchema);
+courseSchema.statics.isCourseExists = async function (id: string) {
+  const existingCourse = await Course.findById(id);
+
+  return existingCourse;
+};
+
+export const Course = model<TCourse, CourseModel>('course', courseSchema);

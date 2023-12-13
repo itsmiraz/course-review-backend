@@ -32,7 +32,6 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
   excludeFields.forEach((el) => delete queryObj[el]);
 
   //Pagination
-
   let page = 1;
   let limit = 10;
   let skip = 0;
@@ -58,7 +57,7 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     'duration',
   ];
 
-  let sortBy = '-createdAt';
+  let sortBy = '__v';
   if (query?.sortBy) {
     const sortByFieldExist = sortByFields.find((el) => el === query?.sortBy);
     if (!sortByFieldExist) {
@@ -71,7 +70,7 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
   // createdAt:-1
   const sortByQuery = limitQuery.sort(sortBy);
 
-  let sortByOder = '-createdAt';
+  let sortByOder = '__v';
 
   if (query?.sortOrder) {
     if (query?.sortOrder === 'asc') {
@@ -173,9 +172,13 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     ...remainingCourseData
   } = payload;
 
-  const oldCourse = await Course.findById(id);
+  const course = await Course.isCourseExists(id);
 
-  if (durationInWeeks && durationInWeeks !== oldCourse?.durationInWeeks) {
+  if (!course) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Course Not Found');
+  }
+
+  if (durationInWeeks && durationInWeeks !== course?.durationInWeeks) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       'Duration in Weeks can not be updated directly',
@@ -184,8 +187,8 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
   let newdurationInWeeks = 0;
   if (startDate || endDate) {
     newdurationInWeeks = getDurationInWeeks(
-      (startDate as string) || (oldCourse?.startDate as string),
-      (endDate as string) || (oldCourse?.endDate as string),
+      (startDate as string) || (course?.startDate as string),
+      (endDate as string) || (course?.endDate as string),
     );
   }
 
@@ -197,19 +200,20 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
       const updateDurationInWeeks = await Course.findByIdAndUpdate(
         id,
         {
-          startDate: startDate || oldCourse?.startDate,
-          endDate: endDate || oldCourse?.endDate,
+          startDate: startDate || course?.startDate,
+          endDate: endDate || course?.endDate,
 
           durationInWeeks: newdurationInWeeks,
         },
         {
           new: true,
+          session,
         },
       );
       if (!updateDurationInWeeks) {
         throw new AppError(
           httpStatus.BAD_REQUEST,
-          'Failed to Update Basic Details',
+          'Failed to Update Duration In Weeks',
         );
       }
     }
