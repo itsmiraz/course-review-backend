@@ -41,6 +41,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     const simplifierError = handleDuplicateError(err);
     statusCode = simplifierError.statusCode;
     message = simplifierError.message;
+    errorMessage = simplifierError.errorMessage;
+    errorDetails = simplifierError.errorDetails;
     // errorSource = simplifierError.errorSources;
   } else if (err instanceof AppError) {
     statusCode = err?.statusCode;

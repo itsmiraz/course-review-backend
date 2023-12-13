@@ -7,17 +7,7 @@ import { Review } from '../review/review.model';
 import { getDurationInWeeks } from './course.utils';
 
 const createcourseIntoDB = async (payload: TCourse) => {
-  const durationInWeeks = getDurationInWeeks(
-    payload.startDate,
-    payload.endDate,
-  );
-
-  const NewCourse = {
-    ...payload,
-    durationInWeeks,
-  };
-
-  const result = await Course.create(NewCourse);
+  const result = await Course.create(payload);
 
   return result;
 };
@@ -188,7 +178,7 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
   if (durationInWeeks && durationInWeeks !== oldCourse?.durationInWeeks) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      'Failed to Update durationInWeeks Details',
+      'Duration in Weeks can not be updated directly',
     );
   }
   let newdurationInWeeks = 0;
