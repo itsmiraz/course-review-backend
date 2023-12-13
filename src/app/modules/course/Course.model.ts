@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { TCourse, TDetails, TTag } from './course.interface';
+import { Categories } from '../categories/categories.model';
+import AppError from '../../errors/AppError';
 
 const tagSchema = new Schema<TTag>({
   name: {
@@ -75,5 +77,13 @@ const courseSchema = new Schema<TCourse>(
     timestamps: true,
   },
 );
+
+courseSchema.pre('save', async function (next) {
+  const isCatagoryExists = await Categories.findById(this.categoryId);
+  if (!isCatagoryExists) {
+    throw new AppError(404, 'Catagory Does not exists!');
+  }
+  next();
+});
 
 export const Course = model<TCourse>('course', courseSchema);

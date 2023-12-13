@@ -16,12 +16,6 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let message = 'Something Went Wrong';
   let errorMessage = 'Something Went Wrong';
   let errorDetails = {};
-  let errorSource: TErrorSource = [
-    {
-      path: '',
-      message: 'Something Went Wrong',
-    },
-  ];
 
   // Checks the error is zod is not
   if (err instanceof ZodError) {
@@ -34,7 +28,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     const simplifierError = handleValidationError(err);
     statusCode = simplifierError.statusCode;
     message = simplifierError.message;
-    errorSource = simplifierError.errorSources;
+    errorDetails = simplifierError.errorDetails;
+    errorMessage = simplifierError.errorMessage;
   } else if (err?.name === 'CastError') {
     const simplifierError = handleCastError(err);
     statusCode = simplifierError.statusCode;
@@ -46,24 +41,14 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     const simplifierError = handleDuplicateError(err);
     statusCode = simplifierError.statusCode;
     message = simplifierError.message;
-    errorSource = simplifierError.errorSources;
+    // errorSource = simplifierError.errorSources;
   } else if (err instanceof AppError) {
     statusCode = err?.statusCode;
-    message = err.message;
-    errorSource = [
-      {
-        path: '',
-        message: err.message,
-      },
-    ];
+    errorDetails = err;
+    errorMessage = err.message;
   } else if (err instanceof Error) {
     message = err.message;
-    errorSource = [
-      {
-        path: '',
-        message: err.message,
-      },
-    ];
+    errorDetails = err;
   }
   //ultimate return
   return res.status(statusCode).json({
