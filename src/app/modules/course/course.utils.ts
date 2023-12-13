@@ -10,10 +10,10 @@ export const getDurationInWeeks = (
 
   // Some Validations for checking the date
   if (isNaN(StartDate.getTime())) {
-    throw new AppError(400, ' Start Date is not Valid');
+    throw new AppError(400, 'Start Date is not Valid');
   }
   if (isNaN(EndDate.getTime())) {
-    throw new AppError(400, ' End Date is not Valid');
+    throw new AppError(400, 'End Date is not Valid');
   }
   if (EndDate.getTime() < StartDate.getTime()) {
     throw new AppError(
