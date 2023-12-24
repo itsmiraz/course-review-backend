@@ -7,6 +7,10 @@ const categoriesSchema = new Schema<TCategories>({
     required: true,
     unique: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 export const Categories = model<TCategories>('categories', categoriesSchema);

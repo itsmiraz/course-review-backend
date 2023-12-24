@@ -16,6 +16,10 @@ const reviewSchema = new Schema<TReview>({
     type: String,
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 reviewSchema.pre('save', async function (next) {
