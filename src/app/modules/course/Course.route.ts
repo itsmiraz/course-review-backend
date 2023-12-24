@@ -19,7 +19,7 @@ router.put(
   courseControllers.updatecourse,
 );
 router.get('/:courseId/reviews', courseControllers.getReviews);
-router.get('/best', courseControllers.getBestCourse);
+createRouter.get('/best', courseControllers.getBestCourse);
 
 export const createCourseRoutes = createRouter;
 export const otherCourseRoutes = router;
