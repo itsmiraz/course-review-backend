@@ -21,6 +21,7 @@ export type TCourse = {
   provider: string;
   durationInWeeks: number;
   details: TDetails;
+  createdBy: Types.ObjectId;
 };
 
 export interface CourseModel extends Model<TCourse> {

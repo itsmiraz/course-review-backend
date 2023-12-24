@@ -74,6 +74,10 @@ const courseSchema = new Schema<TCourse, CourseModel>({
     type: detailSchema,
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 courseSchema.pre('save', async function (next) {
