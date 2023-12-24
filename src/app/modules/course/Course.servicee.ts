@@ -96,7 +96,7 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
 
   if (query?.maxPrice) {
     maxPrice = {
-      price: { $lte: maxPrice },
+      price: { $lte: Number(query?.maxPrice) },
     };
   }
 
