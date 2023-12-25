@@ -2,7 +2,8 @@ import { catchAsync } from '../../utils/catchAsync';
 import { ReviewServices } from './review.servicee';
 
 const createReview = catchAsync(async (req, res) => {
-  const result = await ReviewServices.createReviewIntoDB(req.body);
+  const createdBy = req.user._id;
+  const result = await ReviewServices.createReviewIntoDB(createdBy, req.body);
 
   res.status(201).json({
     success: true,

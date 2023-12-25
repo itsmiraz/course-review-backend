@@ -3,24 +3,30 @@ import { TReview } from './review.interface';
 import { Course } from '../course/course.model';
 import AppError from '../../errors/AppError';
 
-const reviewSchema = new Schema<TReview>({
-  courseId: {
-    type: Schema.Types.ObjectId,
-    required: true,
+const reviewSchema = new Schema<TReview>(
+  {
+    courseId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    rating: {
+      type: Number,
+      required: true,
+    },
+    review: {
+      type: String,
+      required: true,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
   },
-  rating: {
-    type: Number,
-    required: true,
+  {
+    timestamps: true,
   },
-  review: {
-    type: String,
-    required: true,
-  },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
-});
+);
 
 reviewSchema.pre('save', async function (next) {
   const isCourseExist = await Course.findById(this.courseId);
