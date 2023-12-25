@@ -7,6 +7,7 @@ import AppError from '../../errors/AppError';
 
 const createcourse = catchAsync(async (req, res) => {
   const payload = req.body;
+  const userId = req.user._id;
   // console.log(payload);
   const durationInWeeks = getDurationInWeeks(
     payload.startDate,
@@ -17,7 +18,7 @@ const createcourse = catchAsync(async (req, res) => {
     ...payload,
     durationInWeeks,
   };
-  const result = await CourseServices.createcourseIntoDB(NewCourse);
+  const result = await CourseServices.createcourseIntoDB(userId, NewCourse);
 
   res.status(httpStatus.CREATED).json({
     success: true,

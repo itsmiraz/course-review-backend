@@ -28,57 +28,63 @@ const detailSchema = new Schema<TDetails>({
   },
 });
 
-const courseSchema = new Schema<TCourse, CourseModel>({
-  title: {
-    type: String,
-    unique: true,
-    required: true,
+const courseSchema = new Schema<TCourse, CourseModel>(
+  {
+    title: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    instructor: {
+      type: String,
+      required: true,
+    },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    tags: {
+      type: [tagSchema],
+      required: true,
+    },
+    startDate: {
+      type: String,
+      required: true,
+    },
+    endDate: {
+      type: String,
+      required: true,
+    },
+    language: {
+      type: String,
+      required: true,
+    },
+    provider: {
+      type: String,
+      required: true,
+    },
+    durationInWeeks: {
+      type: Number,
+      required: true,
+    },
+    details: {
+      type: detailSchema,
+      required: true,
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
   },
-  instructor: {
-    type: String,
-    required: true,
+  {
+    timestamps: true,
   },
-  categoryId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  tags: {
-    type: [tagSchema],
-    required: true,
-  },
-  startDate: {
-    type: String,
-    required: true,
-  },
-  endDate: {
-    type: String,
-    required: true,
-  },
-  language: {
-    type: String,
-    required: true,
-  },
-  provider: {
-    type: String,
-    required: true,
-  },
-  durationInWeeks: {
-    type: Number,
-    required: true,
-  },
-  details: {
-    type: detailSchema,
-    required: true,
-  },
-  createdBy: {
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
-});
+);
 
 courseSchema.pre('save', async function (next) {
   const isCatagoryExists = await Categories.findById(this.categoryId);

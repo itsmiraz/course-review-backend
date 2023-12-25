@@ -1,7 +1,11 @@
 import { catchAsync } from '../../utils/catchAsync';
 import { categoriesServices } from './categories.servicee';
 const createcategories = catchAsync(async (req, res) => {
-  const result = await categoriesServices.createcategoriesIntoDB(req.body);
+  const createdById = req.user._id;
+  const result = await categoriesServices.createcategoriesIntoDB(
+    createdById,
+    req.body,
+  );
 
   res.status(201).json({
     success: true,

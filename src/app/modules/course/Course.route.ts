@@ -2,12 +2,14 @@ import express from 'express';
 import { courseControllers } from './course.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { CourseValidations } from './course.validation';
+import auth from '../../middlewares/auth';
 
 const createRouter = express.Router();
 const router = express.Router();
 
 createRouter.post(
   '/',
+  auth('admin'),
   validateRequest(CourseValidations.createCourseValidationSchema),
   courseControllers.createcourse,
 );

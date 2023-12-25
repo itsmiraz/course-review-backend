@@ -6,8 +6,11 @@ import mongoose from 'mongoose';
 import { Review } from '../review/review.model';
 import { getDurationInWeeks } from './course.utils';
 
-const createcourseIntoDB = async (payload: TCourse) => {
-  const result = await Course.create(payload);
+const createcourseIntoDB = async (createdBy: string, payload: TCourse) => {
+  const result = await Course.create({
+    ...payload,
+    createdBy: createdBy,
+  });
 
   return result;
 };
@@ -44,7 +47,7 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     page = Number(query?.page);
     skip = (page - 1) * limit;
   }
-  const paginateQuery = Course.find({}).skip(skip);
+  const paginateQuery = Course.find({}).populate('createdBy').skip(skip);
 
   const limitQuery = paginateQuery.limit(limit);
 
