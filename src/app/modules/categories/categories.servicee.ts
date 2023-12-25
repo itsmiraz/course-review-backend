@@ -13,7 +13,7 @@ const createcategoriesIntoDB = async (
 };
 
 const getAllcategoriessFromDb = async () => {
-  const result = await Categories.find({}); // Your Business Logic
+  const result = await Categories.find({}).populate('createdBy'); // Your Business Logic
   return result;
 };
 

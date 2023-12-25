@@ -10,6 +10,7 @@ const categoriesSchema = new Schema<TCategories>({
   createdBy: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: 'User',
   },
 });
 
