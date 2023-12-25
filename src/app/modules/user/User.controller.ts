@@ -24,6 +24,19 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
+const changePassword = catchAsync(async (req, res) => {
+  const user = req.user;
+
+  const result = await UserServices.changePasswordIntoDb(user, req.body);
+
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    message: 'Password changed successfully',
+    data: result,
+  });
+});
+
 const getAllUsers = catchAsync(async (req, res) => {
   const result = await UserServices.getAllUsersFromDb();
   res.status(200).json({
@@ -71,4 +84,5 @@ export const UserControllers = {
   deleteUser,
   loginUser,
   updateUser,
+  changePassword,
 };
