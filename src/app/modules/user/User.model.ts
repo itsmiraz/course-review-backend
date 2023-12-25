@@ -55,20 +55,6 @@ UserSchema.pre('save', async function (next) {
 });
 
 // Static Methods
-UserSchema.statics.isUserExistsWithUsername = async function (
-  username: string,
-) {
-  return await User.findOne({ username: username }).select('+password');
-};
-UserSchema.statics.isJWTIssuedBeforePasswordChanged = function (
-  passwordChangedTimeStamp: Date,
-  jwtIssuedTimestamp: number,
-) {
-  const passwordChangedTime =
-    new Date(passwordChangedTimeStamp).getTime() / 1000;
-  return passwordChangedTime > jwtIssuedTimestamp;
-};
-
 UserSchema.statics.isPasswordMatched = async function (
   plainTextPassword,
   HashedPassword,
