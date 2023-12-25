@@ -7,8 +7,14 @@ const router = express.Router();
 
 router.post(
   '/register',
-  validateRequest(UserValidations.createUserValidationSchema),
+  validateRequest(UserValidations.registerUserValidationSchema),
   UserControllers.registerUser,
+);
+
+router.post(
+  '/login',
+  validateRequest(UserValidations.loginUserValidationSchema),
+  UserControllers.loginUser,
 );
 
 // router.post('/create', UserControllers.createUser);

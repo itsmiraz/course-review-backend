@@ -4,7 +4,7 @@ const createStringSchema = (fieldName: string) =>
     invalid_type_error: `${fieldName} must be a string`,
     required_error: `${fieldName} is required`,
   });
-const createUserValidationSchema = z.object({
+const registerUserValidationSchema = z.object({
   body: z.object({
     username: createStringSchema('User Name'),
     email: createStringSchema('Email'),
@@ -15,7 +15,14 @@ const createUserValidationSchema = z.object({
     role: z.enum(['user', 'admin']).optional(),
   }),
 });
+const loginUserValidationSchema = z.object({
+  body: z.object({
+    username: createStringSchema('User Name'),
+    password: createStringSchema('Password'),
+  }),
+});
 
 export const UserValidations = {
-  createUserValidationSchema,
+  registerUserValidationSchema,
+  loginUserValidationSchema,
 };

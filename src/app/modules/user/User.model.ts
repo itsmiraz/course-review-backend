@@ -1,37 +1,32 @@
 import { Schema, model } from 'mongoose';
-import { TUser } from './User.interface';
+import { TUser, UserModel } from './User.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
-const UserSchema = new Schema<TUser>(
-  {
-    username: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    email: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
-    },
+const UserSchema = new Schema<TUser, UserModel>({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
   },
-
-  {
-    timestamps: true,
+  email: {
+    type: String,
+    unique: true,
+    required: true,
   },
-);
+  password: {
+    type: String,
+    required: true,
+    select: 0,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+});
 
 // Pre save middleware /hook
 UserSchema.pre('save', async function (next) {
@@ -58,9 +53,32 @@ UserSchema.pre('save', async function (next) {
     next();
   }
 });
+
+// Static Methods
+UserSchema.statics.isUserExistsWithUsername = async function (
+  username: string,
+) {
+  return await User.findOne({ username: username }).select('+password');
+};
+UserSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimeStamp: Date,
+  jwtIssuedTimestamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimeStamp).getTime() / 1000;
+  return passwordChangedTime > jwtIssuedTimestamp;
+};
+
+UserSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  HashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, HashedPassword);
+};
+
 UserSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
   return userObject;
 };
-export const User = model<TUser>('User', UserSchema);
+export const User = model<TUser, UserModel>('User', UserSchema);
