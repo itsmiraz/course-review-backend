@@ -12,7 +12,7 @@ const createUserValidationSchema = z.object({
       6,
       'Password Must be minimum 6 characters',
     ),
-    role: z.enum(['user', 'admin']),
+    role: z.enum(['user', 'admin']).optional(),
   }),
 });
 

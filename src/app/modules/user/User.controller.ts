@@ -1,11 +1,12 @@
 import { catchAsync } from '../../utils/catchAsync';
-import { UserServices } from './User.service';
-const createUser = catchAsync(async (req, res) => {
-  const result = await UserServices.createUserIntoDB(req.body);
+import { UserServices } from './User.servicee';
+const registerUser = catchAsync(async (req, res) => {
+  const result = await UserServices.registerUserIntoDb(req.body);
 
-  res.status(200).json({
+  res.status(201).json({
     success: true,
-    message: 'User successfully created',
+    statusCode: 201,
+    message: 'User registered successfully',
     data: result,
   });
 });
@@ -51,7 +52,7 @@ const deleteUser = catchAsync(async (req, res) => {
 });
 
 export const UserControllers = {
-  createUser,
+  registerUser,
   getSingleUser,
   getAllUsers,
   deleteUser,

@@ -1,7 +1,7 @@
 import { User } from './User.model';
 import { TUser } from './User.interface';
 
-const createUserIntoDB = async (payload: TUser) => {
+const registerUserIntoDb = async (payload: TUser) => {
   const result = await User.create(payload);
 
   return result;
@@ -31,7 +31,7 @@ const deleteUserIntoDB = async (id: string) => {
 };
 
 export const UserServices = {
-  createUserIntoDB,
+  registerUserIntoDb,
   getAllUsersFromDb,
   getSingleUserFromDb,
   updateUserIntoDB,
