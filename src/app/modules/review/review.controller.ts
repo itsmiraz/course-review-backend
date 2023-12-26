@@ -13,17 +13,6 @@ const createReview = catchAsync(async (req, res) => {
   });
 });
 
-const getAllcategoriess = catchAsync(async (req, res) => {
-  const result = await ReviewServices.getAllReviewsFromDb();
-  res.status(200).json({
-    success: true,
-    statusCode: 200,
-    message: 'Categories retrieved successfully',
-    data: result,
-  });
-});
-
 export const ReviewControllers = {
   createReview,
-  getAllcategoriess,
 };

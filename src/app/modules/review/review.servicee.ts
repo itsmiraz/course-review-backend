@@ -10,12 +10,6 @@ const createReviewIntoDB = async (createdBy: string, payload: TReview) => {
   return result;
 };
 
-const getAllReviewsFromDb = async () => {
-  const result = await Review.find({}); // Your Business Logic
-  return result;
-};
-
 export const ReviewServices = {
   createReviewIntoDB,
-  getAllReviewsFromDb,
 };
