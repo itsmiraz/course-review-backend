@@ -6,6 +6,7 @@ import config from '../../config';
 import { createToken } from './User.utils';
 import { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { Types } from 'mongoose';
 
 const registerUserIntoDb = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -75,6 +76,46 @@ const changePasswordIntoDb = async (
     throw new AppError(httpStatus.FORBIDDEN, 'Incorrect Old Password');
   }
 
+  // check if the new password is exist on last two password
+
+  /**
+   * Get Latest Two Passwords from the password history
+   * Add checks that the new password already exists on the history
+   * If exists throw error
+   */
+  const LastPasswords = await UserPasswordHistory.aggregate([
+    {
+      $match: {
+        user: new Types.ObjectId(user._id),
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        result: {
+          $sortArray: { input: '$history', sortBy: { createdAt: -1 } },
+        },
+      },
+    },
+    {
+      $limit: 2,
+    },
+  ]);
+  const LastTwoPasswords = LastPasswords[0]?.result?.slice(0, 2);
+
+  for (const Password of LastTwoPasswords) {
+    const isPasswordExists = await bcrypt.compare(
+      payload.newPassword,
+      Password.password,
+    );
+    if (isPasswordExists) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Please provide a Brand New Password Password is already used',
+      );
+    }
+  }
+
   // hash new Pass
   const newHashedPassword = await bcrypt.hash(
     payload.newPassword,
@@ -89,7 +130,8 @@ const changePasswordIntoDb = async (
     { new: true },
   );
 
-  const passwordHistory = await UserPasswordHistory.findOneAndUpdate(
+  // Storing new Password into user History
+  await UserPasswordHistory.findOneAndUpdate(
     {
       user: user._id,
     },
@@ -101,7 +143,6 @@ const changePasswordIntoDb = async (
       },
     },
   );
-  console.log(passwordHistory);
   return result;
 };
 
