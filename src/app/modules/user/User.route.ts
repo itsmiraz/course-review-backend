@@ -24,11 +24,4 @@ router.post(
   UserControllers.changePassword,
 );
 
-// router.post('/create', UserControllers.createUser);
-
-// router.get('/', UserControllers.getAllUsers);
-// router.get('/:id', UserControllers.getSingleUser);
-// router.patch('/:id', UserControllers.updateUser);
-// router.delete('/:id', UserControllers.deleteUser);
-
 export const UserRoutes = router;
