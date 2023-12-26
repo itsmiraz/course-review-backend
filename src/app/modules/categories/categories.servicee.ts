@@ -14,7 +14,7 @@ const createcategoriesIntoDB = async (
 
 const getAllcategoriessFromDb = async () => {
   const result = await Categories.find({}).populate('createdBy'); // Your Business Logic
-  return result;
+  return { categories: result };
 };
 
 export const categoriesServices = {

@@ -7,7 +7,7 @@ import auth from '../../middlewares/auth';
 const createRouter = express.Router();
 const router = express.Router();
 
-createRouter.post(
+router.post(
   '/',
   auth('admin'),
   validateRequest(CourseValidations.createCourseValidationSchema),

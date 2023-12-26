@@ -69,7 +69,6 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
       sortBy = query?.sortBy as string;
     }
   }
-
   // createdAt:-1
   const sortByQuery = limitQuery.sort(sortBy);
 
@@ -160,7 +159,7 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
   };
   return {
     metaData,
-    data: levelQuery,
+    data: { courses: levelQuery },
   };
 };
 
