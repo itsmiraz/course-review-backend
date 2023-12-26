@@ -28,7 +28,7 @@ const changePassword = catchAsync(async (req, res) => {
   const user = req.user;
 
   const result = await UserServices.changePasswordIntoDb(user, req.body);
-  res.status(200).json({
+  res.status(result?.statusCode ? result?.statusCode : 200).json({
     success: result?.success ? result?.success : true,
     statusCode: result?.statusCode ? result?.statusCode : 200,
     message: result?.message

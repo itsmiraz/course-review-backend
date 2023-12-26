@@ -60,7 +60,7 @@ const loginUserIntoDb = async (payload: Partial<TUser>) => {
 
 const changePasswordIntoDb = async (
   user: JwtPayload,
-  payload: { oldPassword: string; newPassword: string },
+  payload: { currentPassword: string; newPassword: string },
 ) => {
   const isUserExists = await User.findById(user._id).select('+password');
   if (!isUserExists) {
@@ -68,7 +68,7 @@ const changePasswordIntoDb = async (
   }
 
   const isPasswordMatched = await User.isPasswordMatched(
-    payload.oldPassword,
+    payload.currentPassword,
     isUserExists.password,
   );
 

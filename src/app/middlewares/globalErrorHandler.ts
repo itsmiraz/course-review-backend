@@ -10,13 +10,14 @@ import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppError';
+import UnAuthorizedError from '../errors/UnAuthorizedError';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;
   let message = 'Something Went Wrong';
   let errorMessage = 'Something Went Wrong';
-  let errorDetails = {};
-
+  let errorDetails = null;
+  let stack = err?.stack;
   // Checks the error is zod is not
   if (err instanceof ZodError) {
     const simplifierError = handleZodError(err);
@@ -48,6 +49,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = err?.statusCode;
     errorDetails = err;
     errorMessage = err.message;
+  } else if (err instanceof UnAuthorizedError) {
+    errorDetails = null;
+    message = 'Unauthorized Access';
+    errorMessage = err?.errorMessage;
+    stack = null;
   } else if (err instanceof Error) {
     message = err.message;
     errorDetails = err;
@@ -58,7 +64,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     message: message,
     errorMessage: errorMessage,
     errorDetails: errorDetails,
-    stack: err?.stack,
+    stack: stack,
   });
 };
 
