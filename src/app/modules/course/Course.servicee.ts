@@ -316,7 +316,7 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     await session.commitTransaction();
     await session.endSession();
 
-    const result = await Course.findById(id);
+    const result = await Course.findById(id).populate('createdBy');
     return result;
   } catch (err) {
     await session.abortTransaction();
