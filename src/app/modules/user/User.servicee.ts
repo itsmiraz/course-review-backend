@@ -109,12 +109,33 @@ const changePasswordIntoDb = async (
       Password.password,
     );
     if (isPasswordExists) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        'Please provide a Brand New Password Password is already used',
-      );
+      return {
+        statusCode: 400,
+        success: false,
+        message: `Password change failed. Ensure the new password is unique and not among the last 2 used (last used on ${new Date(
+          Password.createdAt,
+        )}).`,
+        data: null,
+      };
+      // throw new AppError(
+      //   httpStatus.BAD_REQUEST,
+      //   `Password change failed. Ensure the new password is unique and not among the last 2 used (last used on ${new Date(
+      //     Password.createdAt,
+      //   )}).`,
+      // );
     }
   }
+  // const strongPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+  // console.log(strongPattern.test(payload.newPassword));
+
+  // //  const pattern = new RegExp
+  // if (!strongPattern.test(payload.newPassword)) {
+  //   throw new AppError(
+  //     httpStatus.BAD_REQUEST,
+  //     'User Passoword is Weak. Use More Stonger Password. Try to use Special Characters',
+  //   );
+  // }
 
   // hash new Pass
   const newHashedPassword = await bcrypt.hash(
@@ -143,7 +164,9 @@ const changePasswordIntoDb = async (
       },
     },
   );
-  return result;
+  return {
+    data: result,
+  };
 };
 
 const getAllUsersFromDb = async () => {
