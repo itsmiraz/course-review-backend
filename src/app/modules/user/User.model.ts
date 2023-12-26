@@ -1,9 +1,36 @@
 import { Schema, model } from 'mongoose';
-import { TUser, UserModel } from './User.interface';
+import {
+  TPasswod,
+  TUser,
+  TUserPasswordHistory,
+  UserModel,
+} from './User.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+
+const passwordSchema = new Schema<TPasswod>(
+  {
+    password: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+const userPasswordHistorySchema = new Schema<TUserPasswordHistory>({
+  user: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+  history: {
+    type: [passwordSchema],
+    required: true,
+  },
+});
 
 const UserSchema = new Schema<TUser, UserModel>({
   username: {
@@ -68,3 +95,7 @@ UserSchema.methods.toJSON = function () {
   return userObject;
 };
 export const User = model<TUser, UserModel>('User', UserSchema);
+export const UserPasswordHistory = model<TUserPasswordHistory>(
+  'UserPasswordHistory',
+  userPasswordHistorySchema,
+);

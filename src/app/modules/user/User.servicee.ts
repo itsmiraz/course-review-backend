@@ -1,4 +1,4 @@
-import { User } from './User.model';
+import { User, UserPasswordHistory } from './User.model';
 import { TUser } from './User.interface';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
@@ -9,6 +9,15 @@ import bcrypt from 'bcrypt';
 
 const registerUserIntoDb = async (payload: TUser) => {
   const result = await User.create(payload);
+  const storePassword = new UserPasswordHistory({
+    user: result._id,
+    history: [
+      {
+        password: result.password,
+      },
+    ],
+  });
+  await storePassword.save();
 
   return result;
 };
@@ -80,6 +89,19 @@ const changePasswordIntoDb = async (
     { new: true },
   );
 
+  const passwordHistory = await UserPasswordHistory.findOneAndUpdate(
+    {
+      user: user._id,
+    },
+    {
+      $addToSet: {
+        history: {
+          password: newHashedPassword,
+        },
+      },
+    },
+  );
+  console.log(passwordHistory);
   return result;
 };
 

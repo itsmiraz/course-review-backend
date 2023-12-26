@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { USER_ROLE } from './User.constants';
 
 /* eslint-disable no-unused-vars */
@@ -22,3 +22,12 @@ export interface UserModel extends Model<TUser> {
 }
 
 export type TUserRole = keyof typeof USER_ROLE;
+
+export type TPasswod = {
+  password: string;
+};
+
+export type TUserPasswordHistory = {
+  user: Types.ObjectId;
+  history: TPasswod[];
+};

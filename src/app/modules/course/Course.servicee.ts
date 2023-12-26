@@ -326,9 +326,9 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
 };
 
 const getReviewsFromDb = async (id: string) => {
-  const course = await Course.findById(id);
+  const course = await Course.findById(id).populate('createdBy');
 
-  const reviews = await Review.find({ courseId: id });
+  const reviews = await Review.find({ courseId: id }).populate('createdBy');
 
   return {
     course,
@@ -364,7 +364,9 @@ const getBestCourseFromDb = async () => {
 
   const bestCourseReviewData = reviews[0];
 
-  const course = await Course.findById(bestCourseReviewData._id);
+  const course = await Course.findById(bestCourseReviewData._id).populate(
+    'createdBy',
+  );
 
   const result = {
     course: course,
