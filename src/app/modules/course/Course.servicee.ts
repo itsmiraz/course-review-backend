@@ -70,19 +70,18 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     }
   }
   // createdAt:-1
-  const sortByQuery = limitQuery.sort(sortBy);
+  const sortByQuery = limitQuery.sort({ [sortBy]: 1 });
 
-  let sortByOder = '__v';
-
+  let sortByOrder = '__v';
   if (query?.sortOrder) {
     if (query?.sortOrder === 'asc') {
-      sortByOder = 'createdAt';
+      sortByOrder = 'createdAt';
     } else if (query?.sortOrder === 'desc') {
-      sortByOder = '-createdAt';
+      sortByOrder = '-createdAt';
     }
   }
 
-  const sortByOrderQuery = sortByQuery.sort(sortByOder);
+  const sortByOrderQuery = sortByQuery.sort(sortByOrder);
 
   let minPrice = 0;
 
