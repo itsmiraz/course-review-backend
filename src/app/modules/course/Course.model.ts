@@ -18,15 +18,20 @@ const tagSchema = new Schema<TTag>(
     _id: false,
   },
 );
-const detailSchema = new Schema<TDetails>({
-  level: {
-    type: String,
-    required: true,
+const detailSchema = new Schema<TDetails>(
+  {
+    level: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
   },
-  description: {
-    type: String,
+  {
+    _id: false,
   },
-});
+);
 
 const courseSchema = new Schema<TCourse, CourseModel>(
   {

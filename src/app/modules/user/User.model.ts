@@ -59,20 +59,12 @@ UserSchema.pre('save', async function (next) {
   const user = this; //document
   // Hashing user password and save to the db
   //check this user password strength
-  // const strongPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-  // if (!strongPattern.test(user.password)) {
   user.password = await bcrypt.hash(
     user.password,
     Number(config.bcrypt_salt_round),
   );
   next();
-  // } else {
-  //   throw new AppError(
-  //     httpStatus.BAD_REQUEST,
-  //     'User Passoword is Weak. Use More Stonger Password. Try to use Special Characters',
-  //   );
-  // }
 });
 
 // Static Methods
