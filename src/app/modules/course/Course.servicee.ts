@@ -376,9 +376,10 @@ const getBestCourseFromDb = async () => {
 
   const bestCourseReviewData = reviews[0];
 
-  const course = await Course.findById(bestCourseReviewData._id).populate(
-    'createdBy',
-  );
+  const course = await Course.findById(bestCourseReviewData._id).populate({
+    path: 'createdBy',
+    select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+  });
 
   const result = {
     course: course,
