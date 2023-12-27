@@ -47,7 +47,12 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
     page = Number(query?.page);
     skip = (page - 1) * limit;
   }
-  const paginateQuery = Course.find({}).populate('createdBy').skip(skip);
+  const paginateQuery = Course.find({})
+    .populate({
+      path: 'createdBy',
+      select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+    })
+    .skip(skip);
 
   const limitQuery = paginateQuery.limit(limit);
 
@@ -314,7 +319,10 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     await session.commitTransaction();
     await session.endSession();
 
-    const result = await Course.findById(id).populate('createdBy');
+    const result = await Course.findById(id).populate({
+      path: 'createdBy',
+      select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+    });
     return result;
   } catch (err) {
     await session.abortTransaction();
@@ -324,9 +332,15 @@ const updatecourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
 };
 
 const getReviewsFromDb = async (id: string) => {
-  const course = await Course.findById(id).populate('createdBy');
+  const course = await Course.findById(id).populate({
+    path: 'createdBy',
+    select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+  });
 
-  const reviews = await Review.find({ courseId: id }).populate('createdBy');
+  const reviews = await Review.find({ courseId: id }).populate({
+    path: 'createdBy',
+    select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+  });
 
   return {
     course,

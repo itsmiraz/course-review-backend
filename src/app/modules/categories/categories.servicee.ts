@@ -13,7 +13,10 @@ const createcategoriesIntoDB = async (
 };
 
 const getAllcategoriessFromDb = async () => {
-  const result = await Categories.find({}).populate('createdBy'); // Your Business Logic
+  const result = await Categories.find({}).populate({
+    path: 'createdBy',
+    select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+  }); 
   return { categories: result };
 };
 

@@ -6,7 +6,10 @@ const createReviewIntoDB = async (createdBy: string, payload: TReview) => {
     ...payload,
     createdBy: createdBy,
   });
-  const result = await Review.findById(createReview._id).populate('createdBy');
+  const result = await Review.findById(createReview._id).populate({
+    path: 'createdBy',
+    select: '-createdAt -updatedAt -__v', // Exclude createdAt, updatedAt, and __v
+  });
   return result;
 };
 

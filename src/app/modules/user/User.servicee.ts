@@ -46,6 +46,13 @@ const loginUserIntoDb = async (payload: Partial<TUser>) => {
     email: user.email,
   };
 
+  const userData = {
+    _id: user._id, // User's _id
+    username: user.username, // User's _id
+    email: user.email,
+    role: user.role, // User's role
+  };
+
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
@@ -53,7 +60,9 @@ const loginUserIntoDb = async (payload: Partial<TUser>) => {
   );
 
   return {
-    user,
+    user: {
+      userData,
+    },
     accessToken,
   };
 };

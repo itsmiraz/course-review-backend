@@ -30,28 +30,33 @@ const userPasswordHistorySchema = new Schema<TUserPasswordHistory>({
   },
 });
 
-const UserSchema = new Schema<TUser, UserModel>({
-  username: {
-    type: String,
-    unique: true,
-    required: true,
+const UserSchema = new Schema<TUser, UserModel>(
+  {
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      select: 0,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
   },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
+  {
+    timestamps: true,
   },
-  password: {
-    type: String,
-    required: true,
-    select: 0,
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
-  },
-});
+);
 
 // Pre save middleware /hook
 UserSchema.pre('save', async function (next) {
