@@ -22,6 +22,10 @@ You need git to clone the repository. You can get git from
 
 A number of node.js tools is necessary to initialize and test the project. You must have node.js and its package manager (npm) installed. You can get them from [http://nodejs.org/](http://nodejs.org/). The tools/modules used in this project are listed in package.json and include express, mongodb and mongoose.
 
+# Api Documantation
+
+**Postman** : https://documenter.getpostman.com/view/25372507/2s9YkuYdVS
+
 ## API Routes
 
 ### 1. User Registration
