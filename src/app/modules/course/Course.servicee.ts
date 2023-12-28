@@ -56,13 +56,17 @@ const getAllcoursesFromDb = async (query: Record<string, unknown>) => {
 
   const limitQuery = paginateQuery.limit(limit);
 
+
+  /**
+   * title, price, startDate, endDate, language, durationInWeeks
+   */
   const sortByFields = [
     'title',
     'price',
     'startDate',
     'endDate',
     'language',
-    'duration',
+    'durationInWeeks',
   ];
 
   let sortBy = '__v';
